@@ -1,9 +1,9 @@
-import { sha256 } from 'js-sha256';
-import { schnorr } from '@zilliqa-js/crypto';
-import { getAddressFromPublicKey } from '@zilliqa-js/crypto';
+const { sha256 } = require('js-sha256');
+const { schnorr } = require('@zilliqa-js/crypto');
+const { getAddressFromPublicKey } = require('@zilliqa-js/crypto');
 
 
-export function verifySignature(
+module.exports = function verifySignature(
   message,
   publicKey,
   signature,
