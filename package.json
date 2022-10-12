@@ -17,7 +17,7 @@
     "sqlite3": "^5.1.2"
   },
   "scripts": {
-    "start": "node index.mjs | ./node_modules/.bin/bunyan"
+    "start": "node index.js | ./node_modules/.bin/bunyan"
   },
   "devDependencies": {
     "sequelize-cli": "^6.5.1"
