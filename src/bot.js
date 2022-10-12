@@ -19,8 +19,6 @@ module.exports = class TelegramProvider {
   }
 
   async generateLink(chatId) {
-    chatId = `@${chatId}`;
-
     const hours = 1;
     const date1 = new Date();
     const dateToMilliseconds = date1.getTime();
@@ -58,12 +56,17 @@ module.exports = class TelegramProvider {
       return;
     }
 
-    await this.#models.Chat.build({
-      title: chat.title,
-      chatId: chat.id,
-      allowed: chat.permissions.can_invite_users
-    });
-    log.info(`chatId: ${chatId}, title: ${chat.title}, allowed: ${chat.permissions.can_invite_users} start bot`);
-    bot.sendMessage(chatId, 'started');
+    try {
+      await this.#models.Chat.create({
+        title: chat.title,
+        chatId: chat.id,
+        allowed: chat.permissions.can_invite_users
+      });
+  
+      log.info(`chatId: ${chatId}, title: ${chat.title}, allowed: ${chat.permissions.can_invite_users} start bot`);
+      bot.sendMessage(chatId, 'started');
+    } catch (err) {
+      log.error(`chatId: ${chatId}, title: ${chat.title}`, err);
+    }
   }
 }
