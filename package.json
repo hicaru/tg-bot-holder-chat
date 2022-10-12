@@ -6,6 +6,7 @@
   "author": "Hicaru <hicc0rus@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "node-telegram-bot-api": "^0.59.0"
   }
 }
