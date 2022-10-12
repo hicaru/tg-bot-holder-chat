@@ -6,7 +6,15 @@
   "author": "Hicaru <hicc0rus@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@mikro-orm/core": "^5.4.2",
+    "@mikro-orm/migrations": "^5.4.2",
+    "@mikro-orm/sqlite": "^5.4.2",
+    "bunyan": "^1.8.15",
     "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "node-telegram-bot-api": "^0.59.0"
+  },
+  "scripts": {
+    "start": "node index.mjs | ./node_modules/.bin/bunyan"
   }
 }
