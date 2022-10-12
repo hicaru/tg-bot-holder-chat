@@ -1,4 +1,4 @@
-import TelegramBot from 'node-telegram-bot-api';
+const TelegramBot = require('node-telegram-bot-api');
 
 
 export class TelegramBot {

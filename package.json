@@ -8,6 +8,7 @@
   "dependencies": {
     "@zilliqa-js/crypto": "^3.3.4",
     "bunyan": "^1.8.15",
+    "cross-fetch": "^3.1.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "js-sha256": "^0.9.0",
