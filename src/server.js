@@ -1,7 +1,10 @@
 const bunyan = require('bunyan');
+const assert = require('node:assert/strict');
 const express = require('express');
 const TelegramProvider = require('./bot');
+const verifySignature = require('./verify-signature');
 const sequelize = require('../models');
+const { fromBech32Address } = require('@zilliqa-js/crypto');
 
 const { PORT } = process.env;
 const port = PORT ?? 3000;
@@ -13,29 +16,68 @@ const log = bunyan.createLogger({
 });
 
 
-app.get('/:uuid', async (req, res) => {
+app.post('/create', async (req, res) => {
   try {
-    const { uuid } = req.params;
+    const {
+      uuid,
+      message,
+      publicKey,
+      signature,
+      bech32
+    } = req.body;
+    const base16 = fromBech32Address(bech32).toLowerCase();
+
+    assert(uuid, 'uuid is required');
+    assert(message, 'message is required');
+    assert(publicKey, 'publicKey is required');
+    assert(signature, 'signature is required');
+    assert(bech32, 'bech32 is required');
+
+    const msg = JSON.parse(message);
+
+    assert(msg.username, 'msg.username is required');
+
+    const balance = await models.State.findOne({
+      base16
+    });
     const chat = await models.Chat.findOne({
-      uuid: uuid
+      uuid
     });
 
-    if (!chat) {
+    assert(balance, 'This address balance is zero');
+    assert(chat, 'Incorrect uuid, cannot find a Chat');
+
+    const verify = verifySignature({
+      message,
+      publicKey,
+      signature,
+      address: base16
+    });
+
+    assert(verify, 'Signature verify failed');
+
+    const user = await models.User.findOne({
+      base16
+    });
+
+    if (user) {
       return res.json({
-        error: {
-          message: 'Chat not found'
-        }
+        link: user.link
       });
     }
 
     const link = await bot.generateLink(chat.chatId);
 
-    delete link.creator;
-
-    res.json(link);
+    return res.json({
+      link: link.invite_link
+    });
   } catch (err) {
     log.error(err);
-    res.send(err);
+    return res.json({
+      error: {
+        message: err.message
+      }
+    });
   }
 });
 
