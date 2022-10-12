@@ -22,15 +22,30 @@ async function snapshot() {
     },
     body: JSON.stringify(body)
   });
-  return res.json();
+  const { result } = await res.json();
+  const balances = result['balances'];
+  const entries = Object.entries(balances).filter(
+    ([, balance]) => BigInt(balance) > BigInt(0)
+  );
+
+  return Object.fromEntries(entries);;
 }
 
 (async function(){
   const { models } = sequelize.sequelize;
   const state = await snapshot();
 
-  console.log(state);
-
   await models.State.drop();
   await models.State.sync();
+
+  const bulks = Object.keys(state).map((key) => ({
+    base16: key,
+    balance: state[key]
+  }));
+
+  await models.State.bulkCreate(bulks);
+
+  // const values = await models.State.findAll();
+
+  // console.log(JSON.stringify(values, null, 4));
 }());

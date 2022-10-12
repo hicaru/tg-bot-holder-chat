@@ -16,9 +16,13 @@ module.exports = (sequelize, DataTypes) => {
   State.init({
     base16: {
       type: DataTypes.STRING,
-      unique: true
+      unique: true,
+      allowNull: false
     },
-    balance: DataTypes.BIGINT
+    balance: {
+      type: DataTypes.BIGINT,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'State',
