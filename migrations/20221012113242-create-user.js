@@ -10,13 +10,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       base16: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false
       },
       link: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,

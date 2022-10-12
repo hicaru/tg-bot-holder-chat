@@ -44,8 +44,4 @@ async function snapshot() {
   }));
 
   await models.State.bulkCreate(bulks);
-
-  // const values = await models.State.findAll();
-
-  // console.log(JSON.stringify(values, null, 4));
 }());
