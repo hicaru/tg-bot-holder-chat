@@ -57,18 +57,21 @@ module.exports = class TelegramProvider {
     bot.on('message', async (msg) => {
       if (msg.new_chat_members) {
         const chatId = msg.chat.id;
-
-        for (const member of msg.new_chat_members) {
-          const { is_bot, first_name, id } = member;
-          const user = await models.User.findOne({
-            name: first_name
-          });
-
-          if (is_bot || !user) {
-            // await bot.banChatMember(chatId, id);
-            await bot.kickChatMember(chatId, id);
-            log.info(`killed: ${first_name}, id: ${id}, is_bot: ${is_bot}, link: ${user ? user.link : null}`);
-            continue;
+        
+        if (msg.new_chat_participant) {
+          const { is_bot, first_name, id } = msg.new_chat_participant;
+          try {
+            const user = await this.#models.User.findOne({
+              name: first_name
+            });
+  
+            if (is_bot || !user || user.name !== first_name) {
+              // await bot.banChatMember(chatId, id);
+              await bot.banChatMember(chatId, id);
+              log.info(`killed: ${first_name}, id: ${id}, is_bot: ${is_bot}, link: ${user ? user.link : null}`);
+            }
+          } catch (err) {
+            log.error(`try ban chat member: ${first_name} err:`, err);
           }
         }
       }
@@ -92,10 +95,10 @@ module.exports = class TelegramProvider {
       });
   
       log.info(`chatId: ${chatId}, title: ${chat.title}, id: ${dbChat.uuid}`);
-      bot.sendMessage(chatId, 'started');
+      bot.sendMessage(chatId, `started uuid: (${dbChat.uuid})`);
     } catch (err) {
       bot.sendMessage(chatId, err.message);
-      log.error(`chatId: ${chatId}, title: "${chat.title}"`, err);
+      log.error(`try add chat, chatId: ${chatId}, title: "${chat.title}"`, err);
     }
   }
 

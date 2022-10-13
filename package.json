@@ -19,7 +19,8 @@
   },
   "scripts": {
     "migrate": "npx sequelize-cli db:migrate",
-    "start": "npm run migrate && node index.js | ./node_modules/.bin/bunyan"
+    "start": "npm run migrate && node index.js | ./node_modules/.bin/bunyan",
+    "snapshot": "node src/snapshot.js | ./node_modules/.bin/bunyan"
   },
   "devDependencies": {
     "sequelize-cli": "^6.5.1"

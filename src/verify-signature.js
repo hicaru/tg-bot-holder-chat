@@ -9,7 +9,6 @@ module.exports = function verifySignature(
   signature,
   address
 ) {
-  console.log(message);
   const hashStr = sha256(message);
   const hashBytes = Buffer.from(hashStr, 'hex');
   const bytecSignature = schnorr.toSignature(signature);
