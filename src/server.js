@@ -21,10 +21,10 @@ const log = bunyan.createLogger({
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/', (_, res) => {
-  const html = fs.readFileSync(__dirname + '/index.html');
-  res.send(html.toString());
-});
+// app.get('/', (_, res) => {
+//   const html = fs.readFileSync(__dirname + '/index.html');
+//   res.send(html.toString());
+// });
 
 
 app.post('/create', async (req, res) => {
