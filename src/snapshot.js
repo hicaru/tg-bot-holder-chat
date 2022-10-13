@@ -8,7 +8,32 @@ const sequelize = require('../models');
 const NODE = 'https://api.zilliqa.com';
 const CONTRACT = fromBech32Address(process.env.CONTRACT);
 
-async function snapshot() {
+
+async function snapshotNFT() {
+  const field = 'owned_token_count';
+  const body = {
+    method: 'GetSmartContractSubState',
+    params: [CONTRACT.toLowerCase().replace('0x', ''), field, []],
+    id: 1,
+    jsonrpc: `2.0`
+  };
+  const res = await fetch(NODE, {
+    method: `POST`,
+    headers: {
+      "Content-Type": `application/json`,
+    },
+    body: JSON.stringify(body)
+  });
+  const { result } = await res.json();
+  const balances = result[field];
+  const entries = Object.entries(balances).filter(
+    ([, balance]) => BigInt(balance) > BigInt(0)
+  );
+
+  return Object.fromEntries(entries);
+}
+
+async function snapshotZRC2() {
   const body = {
     method: 'GetSmartContractSubState',
     params: [CONTRACT.toLowerCase().replace('0x', ''), 'balances', []],
@@ -28,12 +53,12 @@ async function snapshot() {
     ([, balance]) => BigInt(balance) > BigInt(0)
   );
 
-  return Object.fromEntries(entries);;
+  return Object.fromEntries(entries);
 }
 
 (async function(){
   const { models } = sequelize.sequelize;
-  const state = await snapshot();
+  const state = await snapshotNFT();
 
   await models.State.drop();
   await models.State.sync();
