@@ -57,7 +57,8 @@ app.post('/create', async (req, res) => {
     assert(verify, 'Signature verify failed');
 
     const user = await models.User.findOne({
-      base16
+      base16,
+      name: msg.username
     });
 
     if (user) {
@@ -67,6 +68,14 @@ app.post('/create', async (req, res) => {
     }
 
     const link = await bot.generateLink(chat.chatId);
+
+    if (!user) {
+      await models.User.create({
+        base16,
+        name: msg.username,
+        link: link.invite_link
+      });
+    }
 
     return res.json({
       link: link.invite_link

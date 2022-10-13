@@ -20,12 +20,12 @@ module.exports = class TelegramProvider {
   }
 
   async generateLink(chatId) {
-    const hours = 1;
-    const date1 = new Date();
-    const dateToMilliseconds = date1.getTime();
-    const addedHours = dateToMilliseconds + (3600000 * hours);
-    const newDate = new Date(addedHours);
-    const link = await bot.createChatInviteLink(chatId, undefined, newDate.getTime(), 1);
+    // const hours = 1;
+    // const date1 = new Date();
+    // const dateToMilliseconds = date1.getTime();
+    // const addedHours = dateToMilliseconds + (3600000 * hours);
+    // const newDate = new Date(addedHours).getTime();
+    const link = await bot.createChatInviteLink(chatId, undefined, undefined, 1);
 
     return link;
   }
