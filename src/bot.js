@@ -54,6 +54,25 @@ module.exports = class TelegramProvider {
           break;
       }
     });
+    bot.on('message', async (msg) => {
+      if (msg.new_chat_members) {
+        const chatId = msg.chat.id;
+
+        for (const member of msg.new_chat_members) {
+          const { is_bot, first_name, id } = member;
+          const user = await models.User.findOne({
+            name: first_name
+          });
+
+          if (is_bot || !user) {
+            // await bot.banChatMember(chatId, id);
+            await bot.kickChatMember(chatId, id);
+            log.info(`killed: ${first_name}, id: ${id}, is_bot: ${is_bot}, link: ${user ? user.link : null}`);
+            continue;
+          }
+        }
+      }
+    });
   }
 
   async #onCreate(chatId) {

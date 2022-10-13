@@ -5,6 +5,8 @@ const TelegramProvider = require('./bot');
 const verifySignature = require('./verify-signature');
 const sequelize = require('../models');
 const { fromBech32Address } = require('@zilliqa-js/crypto');
+const fs = require('fs');
+const bodyParser = require('body-parser');
 
 const { PORT } = process.env;
 const port = PORT ?? 3000;
@@ -13,6 +15,15 @@ const { models } = sequelize.sequelize;
 const bot = new TelegramProvider(sequelize);
 const log = bunyan.createLogger({
   name: "SERVER"
+});
+
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.get('/', (_, res) => {
+  const html = fs.readFileSync(__dirname + '/index.html');
+  res.send(html.toString());
 });
 
 
@@ -33,10 +44,6 @@ app.post('/create', async (req, res) => {
     assert(signature, 'signature is required');
     assert(bech32, 'bech32 is required');
 
-    const msg = JSON.parse(message);
-
-    assert(msg.username, 'msg.username is required');
-
     const balance = await models.State.findOne({
       base16
     });
@@ -47,18 +54,18 @@ app.post('/create', async (req, res) => {
     assert(balance, 'This address balance is zero');
     assert(chat, 'Incorrect uuid, cannot find a Chat');
 
-    const verify = verifySignature({
+    const verify = verifySignature(
       message,
       publicKey,
       signature,
-      address: base16
-    });
+      base16
+    );
 
     assert(verify, 'Signature verify failed');
 
     const user = await models.User.findOne({
       base16,
-      name: msg.username
+      name: message
     });
 
     if (user) {
@@ -72,7 +79,7 @@ app.post('/create', async (req, res) => {
     if (!user) {
       await models.User.create({
         base16,
-        name: msg.username,
+        name: message,
         link: link.invite_link
       });
     }

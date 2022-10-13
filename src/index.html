@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="https://zilpay.io/favicon/favicon.ico">
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script>
+</head>
+<body>
+  <button onclick="connect()">
+    connect
+  </button>
+  <input id="username" type="text">
+  <button onclick="sign()">
+    connect
+  </button>
+
+  <button onclick="sign()">
+    sign
+  </button>
+  <script>
+    function connect() {
+      window.zilPay.wallet.connect();
+    }
+    async function sign() {
+      const input = $('#username')[0];
+      const username = input.value;
+      const data = await zilPay.wallet.sign(username);
+      const res = await fetch('/create', {
+        method: `POST`,
+        headers: {
+          "Content-Type": `application/json`,
+        },
+        body: JSON.stringify({
+          ...data,
+          uuid: '07513c86-94ae-44ee-971e-885fab5b0927',
+          bech32: window.zilPay.wallet.defaultAccount.bech32
+        })
+      });
+      const result = await res.json();
+      console.log(result.link);
+      alert(result.link);
+    }
+  </script>
+</body>
+</html>
