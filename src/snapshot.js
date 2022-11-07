@@ -5,7 +5,7 @@ const { fromBech32Address } = require('@zilliqa-js/crypto');
 const sequelize = require('../models');
 
 
-const NODE = prompt.env.NODE;
+const NODE = prompt.env.NODE_API;
 const CONTRACT = fromBech32Address(process.env.CONTRACT);
 
 
