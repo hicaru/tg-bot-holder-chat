@@ -5,7 +5,6 @@ const TelegramProvider = require('./bot');
 const verifySignature = require('./verify-signature');
 const sequelize = require('../models');
 const { fromBech32Address } = require('@zilliqa-js/crypto');
-const fs = require('fs');
 const bodyParser = require('body-parser');
 
 const { PORT } = process.env;
