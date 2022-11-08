@@ -40,6 +40,7 @@ module.exports = class TelegramProvider {
       const resp = match[1];
 
       if (member.status !== 'creator') {
+        log.warn('member is not creator');
         return;
       }
 
