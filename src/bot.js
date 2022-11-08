@@ -33,14 +33,13 @@ module.exports = class TelegramProvider {
   async subscribe() {
     log.info('bot subscribed');
     bot.onText(/\/zilpay (.+)/, async (msg, match) => {
-      log.info(msg.from);
-
       if (msg.from.username !== ADMIN) return;
 
       const chatId = msg.chat.id;
       const member = await bot.getChatMember(chatId, msg.from.id);
       const resp = match[1];
 
+      log.info(member);
       if (member.status !== 'creator') {
         log.warn('member is not creator');
         return;
