@@ -1,5 +1,6 @@
 const bunyan = require('bunyan');
 const assert = require('node:assert/strict');
+const fs = require('fs');
 const express = require('express');
 const TelegramProvider = require('./bot');
 const verifySignature = require('./verify-signature');
