@@ -39,8 +39,7 @@ module.exports = class TelegramProvider {
       const member = await bot.getChatMember(chatId, msg.from.id);
       const resp = match[1];
 
-      log.info(member);
-      if (member.status !== 'creator') {
+      if (member.status !== 'creator' && member.status !== 'administrator') {
         log.warn('member is not creator');
         return;
       }
