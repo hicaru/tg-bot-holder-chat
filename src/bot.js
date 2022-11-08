@@ -33,6 +33,8 @@ module.exports = class TelegramProvider {
   async subscribe() {
     log.info('bot subscribed');
     bot.onText(/\/zilpay (.+)/, async (msg, match) => {
+      log.info(msg.from);
+
       if (msg.from.username !== ADMIN) return;
 
       const chatId = msg.chat.id;
