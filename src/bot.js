@@ -70,7 +70,7 @@ module.exports = class TelegramProvider {
               log.info(`killed: ${first_name}, id: ${id}, is_bot: ${is_bot}, link: ${user ? user.link : null}`);
             }
           } catch (err) {
-            log.error(`try ban chat member: ${first_name} err:`, err);
+            log.error(`try ban chat member: ${first_name}`);
           }
         }
       }
