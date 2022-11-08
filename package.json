@@ -23,6 +23,7 @@
     "snapshot": "node src/snapshot.js | ./node_modules/.bin/bunyan"
   },
   "devDependencies": {
+    "fs": "^0.0.1-security",
     "sequelize-cli": "^6.5.1"
   }
 }
